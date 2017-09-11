@@ -44,9 +44,53 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
+        public ActionResult RosterList()
+        {
+            return View();
+        }
+
         #endregion 
 
         #region Verbs
+        [HttpPost]
+        public JsonResult AddPlayerRoster(string name, string password)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
+            {
+                var msg = "missing data or invalid password.";
+                return Json(JsonConvert.SerializeObject(msg));
+            }
+            if (!( name.Length > 0 && CalculateHash(password) == _hash))
+            {
+                return Json("invalid password.");
+            }
+            
+            _client.PushAsync("roster", new
+            {
+                name = name,
+                text = ""
+            }).Wait();
+
+            return Json("");
+        }
+
+        [HttpPost]
+        public JsonResult DeletePlayerRoster(string id, string password)
+        {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
+            {
+                var msg = "missing data or invalid password.";
+                return Json(JsonConvert.SerializeObject(msg));
+            }
+            if (CalculateHash(password) != _hash)
+            {
+                return Json("invalid password.");
+            }
+
+            _client.Delete("roster/" + id);
+
+            return Json("");
+        }
 
         [HttpPost]
         public JsonResult SubmitMethod(string name, string date, string password)
@@ -61,9 +105,16 @@ namespace AttendanceTracker.Controllers
                 return Json("invalid password.");
             }
 
+            // make sure name is in the roster list
+            var roster = GetCurrentRoster();
+            if (!(roster.Where(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).ToList().Count > 0))
+            {
+                return Json("invalid name.");
+            }
+
             var dt = Convert.ToDateTime(date);
             var day = dt.DayOfWeek;
-            _client.PushAsync("", new
+            _client.PushAsync("attendance", new
             {
                 name = name,
                 text = date + $" ({day})"
@@ -85,7 +136,7 @@ namespace AttendanceTracker.Controllers
                 return Json("invalid password");
             }
 
-            _client.Delete(id);
+            _client.Delete("attendance/" + id);
 
             return Json("");
         }
@@ -96,7 +147,7 @@ namespace AttendanceTracker.Controllers
         public List<PlayerAttendance> GetCurrentDataBase()
         {
             var list = new List<PlayerAttendance>();
-            var results = _client.Get("");
+            var results = _client.Get("attendance");
             var attendance = results.Body;
             var players = attendance.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("text"));
             foreach(var split in players)
@@ -121,6 +172,33 @@ namespace AttendanceTracker.Controllers
             }
 
             return list;
+        }
+
+        public List<PlayerRoster> GetCurrentRoster()
+        {
+            var list = new List<PlayerRoster>();
+            var results = _client.Get("roster");
+            var attendance = results.Body;
+            var players = attendance.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("text"));
+            foreach (var split in players)
+            {
+                // the id of each player in db
+                var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
+
+                // get the name/date now
+                var newSplit = split.Replace(id, string.Empty).Replace("name", string.Empty);
+                var player = newSplit.Split(new string[] { "text" }, StringSplitOptions.None);
+                var name = player[0].Substring(7, player[0].Length - 10);
+                var playerRoster = new PlayerRoster()
+                {
+                    Id = $"-{id}",
+                    Name = name,
+                };
+
+                list.Add(playerRoster);
+            }
+
+            return list.OrderBy(x=>x.Name).ToList();
         }
 
         public int GetTotalDatesLogged(List<PlayerAttendance> list)
