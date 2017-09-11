@@ -1,4 +1,7 @@
-﻿
+﻿$(document).ready(function () {
+    $('#attendance').DataTable();
+});
+
 // delete player from attendance list
 function DeleteMethod(id) {
     var password = $("#password").val();
@@ -46,7 +49,7 @@ function CallMethod() {
         dataType: "json",
         success: function (response) {
             if (response.length > 0) {
-                
+
                 var div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
@@ -85,6 +88,7 @@ function AddPlayerRoster() {
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
+            // validation passed, successful.
             else {
                 var div = $(".validation");
                 div.empty();
