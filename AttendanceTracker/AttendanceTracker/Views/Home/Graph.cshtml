@@ -1,0 +1,42 @@
+﻿@using AttendanceTracker.Controllers;
+@using AttendanceTracker.Models;
+
+@model  IEnumerable<AttendanceTracker.Models.PlayerAttendance>
+@{
+    ViewBag.Title = "Table Results";
+}
+<h2>@ViewBag.Title.</h2>
+@{var list = Model; }
+<h3>Occurrences</h3>
+<div class="input-group">
+    <input id="filter" type="text" class="form-control" placeholder="Search...">
+</div>
+<table class="table table-striped searchable">
+    @{ 
+        var dict = new Dictionary<string,int>();
+        var controller = (HomeController)ViewContext.Controller;
+        var totalDates = controller.GetTotalDatesLogged(list.ToList());
+        foreach(var x in list)
+        {
+            var occurences = controller.GetOccurrences(x.Name, list.ToList());
+            if (!dict.ContainsKey(x.Name))
+            {
+                dict.Add(x.Name, occurences);
+            }
+        }
+
+        foreach(var d in dict.ToList())
+        {
+            var percent = ((double)(totalDates - d.Value) / (double)totalDates) * 100;
+            <tr>
+                <td>@d.Key</td>
+                <td>@d.Value</td>
+                <td>@((int)percent)%</td>
+            </tr>
+        }
+    }
+</table>
+
+@section scripts {
+    <script src="~/Scripts/search.js"></script>
+}
