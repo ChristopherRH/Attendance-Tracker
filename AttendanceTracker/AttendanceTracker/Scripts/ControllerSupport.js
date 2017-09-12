@@ -13,11 +13,36 @@ $(document).ready(function () {
             stateSave: true
         });
 
+    // this is strictly a visual on the datatables, so it's ok if someone fucks with it
     $('#attendance tbody').on('click', 'input', function () {
-        table
-            .row($(this).parents('tr'))
-            .remove()
-            .draw();
+        var rowDelete = $(this);
+        var password = $("#password").val();
+        var submit = '{password: "' + password + '" }';
+        $.ajax({
+            type: "POST",
+            url: 'Home/ValidatePasswordSalt',
+            data: submit,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var parsed = JSON.parse(response);
+                var valid = parsed["isValid"];
+                if (valid === "false") {
+                    var div = $(".validation");
+                    div.empty();
+                    div.append("INVALID PASSWORD OR MISSING DATA");
+                }
+                // validation passed, successful.
+                else {
+                    var div = $(".validation");
+                    div.empty();
+                    table
+                        .row($(rowDelete).parents('tr'))
+                        .remove()
+                        .draw();
+                }
+            }
+        })
     });
 });
 // delete player from attendance list

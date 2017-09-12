@@ -53,6 +53,17 @@ namespace AttendanceTracker.Controllers
 
         #region Verbs
         [HttpPost]
+        public JsonResult ValidatePasswordSalt(string password)
+        {
+            var valid = "{\"isValid\": \"false\"}";
+            if(CalculateHash(password) == _hash)
+            {
+                valid = "{\"isValid\": \"true\"}";
+            }
+            return Json(valid);
+        }
+
+        [HttpPost]
         public JsonResult AddPlayerRoster(string name, string password)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
