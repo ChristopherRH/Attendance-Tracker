@@ -18,9 +18,14 @@ $(document).ready(function () {
         var rowDelete = $(this);
         var password = $("#password").val();
         var submit = '{password: "' + password + '" }';
+        var urldir = window.location.pathname.split("Home");
+        var urlPath = "Home/ValidatePasswordSalt";
+        if (urldir.length > 1) {
+            var urlPath = "ValidatePasswordSalt";
+        }
         $.ajax({
             type: "POST",
-            url: 'Home/ValidatePasswordSalt',
+            url: urlPath,
             data: submit,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
