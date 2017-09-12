@@ -57,21 +57,31 @@ namespace AttendanceTracker.Controllers
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
             {
-                var msg = "missing data or invalid password.";
+                var msg = "ERROR: missing data or invalid password.";
                 return Json(JsonConvert.SerializeObject(msg));
             }
             if (!( name.Length > 0 && CalculateHash(password) == _hash))
             {
-                return Json("invalid password.");
+                return Json("ERROR: invalid password.");
             }
-            
+
+            var list = GetCurrentRoster();
+            var player = list.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if(player != null)
+            {
+                return Json("ERROR: already in list");
+            }
+
             _client.PushAsync("roster", new
             {
                 name = name,
                 text = ""
             }).Wait();
 
-            return Json("");
+            list = GetCurrentRoster();
+            player = list.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            var json = JsonConvert.SerializeObject(player);
+            return Json(json);
         }
 
         [HttpPost]
@@ -79,17 +89,19 @@ namespace AttendanceTracker.Controllers
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
             {
-                var msg = "missing data or invalid password.";
+                var msg = "ERROR: missing data or invalid password.";
                 return Json(JsonConvert.SerializeObject(msg));
             }
             if (CalculateHash(password) != _hash)
             {
-                return Json("invalid password.");
+                return Json("ERROR: invalid password.");
             }
 
+            var list = GetCurrentRoster();
+            var player = list.FirstOrDefault(x => x.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase));
             _client.Delete("roster/" + id);
-
-            return Json("");
+            var json = JsonConvert.SerializeObject(player);
+            return Json(json);
         }
 
         [HttpPost]
@@ -97,19 +109,19 @@ namespace AttendanceTracker.Controllers
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(date) || string.IsNullOrEmpty(password))
             {
-                var msg = "missing data or invalid password.";
+                var msg = "ERROR: missing data or invalid password.";
                 return Json(JsonConvert.SerializeObject(msg));
             }
             if (!(IsValidDate(date) && name.Length > 0 && CalculateHash(password) == _hash))
             {
-                return Json("invalid password.");
+                return Json("ERROR: invalid password.");
             }
 
             // make sure name is in the roster list
             var roster = GetCurrentRoster();
             if (!(roster.Where(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).ToList().Count > 0))
             {
-                return Json("invalid name.");
+                return Json("ERROR: invalid name.");
             }
 
             var dt = Convert.ToDateTime(date);
@@ -120,7 +132,12 @@ namespace AttendanceTracker.Controllers
                 text = date + $" ({day})"
             }).Wait();
 
-            return Json("");
+
+            var list = GetCurrentDataBase();
+            var player = list.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) &&
+                                             x.Date == dt);
+            var json = JsonConvert.SerializeObject(player);
+            return Json(json);
         }
 
         [HttpPost]
@@ -128,17 +145,19 @@ namespace AttendanceTracker.Controllers
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
             {
-                return Json("invalid password");
+                return Json("ERROR: invalid password");
             }
 
             if (CalculateHash(password) != _hash)
             {
-                return Json("invalid password");
+                return Json("ERROR: invalid password");
             }
 
+            var list = GetCurrentDataBase();
+            var player = list.FirstOrDefault(x => x.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase));
             _client.Delete("attendance/" + id);
-
-            return Json("");
+            var json = JsonConvert.SerializeObject(player);
+            return Json(json);
         }
 
         #endregion

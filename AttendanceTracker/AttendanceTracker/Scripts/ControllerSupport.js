@@ -1,7 +1,25 @@
-﻿$(document).ready(function () {
-    $('#attendance').DataTable();
-});
+﻿var table;
+var weekday = new Array(7);
+weekday[0] = "Sunday";
+weekday[1] = "Monday";
+weekday[2] = "Tuesday";
+weekday[3] = "Wednesday";
+weekday[4] = "Thursday";
+weekday[5] = "Friday";
+weekday[6] = "Saturday";
+$(document).ready(function () {
+    table = $('#attendance').DataTable(
+        {
+            stateSave: true
+        });
 
+    $('#attendance tbody').on('click', 'input', function () {
+        table
+            .row($(this).parents('tr'))
+            .remove()
+            .draw();
+    });
+});
 // delete player from attendance list
 function DeleteMethod(id) {
     var password = $("#password").val();
@@ -13,16 +31,16 @@ function DeleteMethod(id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.length > 0) {
+            if (response.indexOf("ERROR") != -1) {
 
                 var div = $(".validation");
                 div.empty();
-                div.append("INVALID PASSWORD");
+                div.append("INVALID PASSWORD OR MISSING DATA");
             }
+            // validation passed, successful.
             else {
                 var div = $(".validation");
                 div.empty();
-                $('#messagesDiv').load(document.URL + ' #messagesDiv');
             }
         },
         error: function (response) {
@@ -48,16 +66,27 @@ function CallMethod() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.length > 0) {
+            if (response.indexOf("ERROR") != -1) {
 
                 var div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
+            // validation passed, successful.
             else {
                 var div = $(".validation");
                 div.empty();
-                $('#messagesDiv').load(document.URL + ' #messagesDiv');
+                var parsed = JSON.parse(response);
+                var nameAdd = parsed["Name"];
+                var date = new Date(parsed["Date"]);
+                var dayAdd = parsed["Day"];
+                var idAdd = parsed["Id"];
+                table.row.add([
+                    nameAdd,
+                    date.toLocaleString().split(',')[0],
+                    weekday[date.getDay()],
+                    '<input type="button" class="btn btn-danger" onclick=\'DeleteMethod("' + idAdd + '");\' value="Delete" />'
+                ]).draw(false);
             }
         },
         error: function (response) {
@@ -82,7 +111,7 @@ function AddPlayerRoster() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.length > 0) {
+            if (response.indexOf("ERROR") != -1) {
 
                 var div = $(".validation");
                 div.empty();
@@ -92,7 +121,13 @@ function AddPlayerRoster() {
             else {
                 var div = $(".validation");
                 div.empty();
-                $('#messagesDiv').load(document.URL + ' #messagesDiv');
+                var parsed = JSON.parse(response);
+                var nameAdd = parsed["Name"];
+                var idAdd = parsed["Id"];
+                table.row.add([
+                    nameAdd,
+                    '<input type="button" class="btn btn-danger" onclick=\'DeletePlayerRoster("' + idAdd + '");\' value="Delete" />'
+                ]).draw(false);
             }
         },
         error: function (response) {
@@ -115,16 +150,16 @@ function DeletePlayerRoster(id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.length > 0) {
+            if (response.indexOf("ERROR") != -1) {
 
                 var div = $(".validation");
                 div.empty();
-                div.append("INVALID PASSWORD");
+                div.append("INVALID PASSWORD OR MISSING DATA");
             }
+            // validation passed, successful.
             else {
                 var div = $(".validation");
                 div.empty();
-                $('#messagesDiv').load(document.URL + ' #messagesDiv');
             }
         },
         error: function (response) {
