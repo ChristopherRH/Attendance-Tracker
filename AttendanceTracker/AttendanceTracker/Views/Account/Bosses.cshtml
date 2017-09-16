@@ -21,61 +21,61 @@
                     <tr>
                         <td>@x.User</td>
                         <td>
-                            <select>
+                            <select id="boss1">
                                 <option value="@x.Goroth">@x.Goroth</option>
                                 <option value="@(!x.Goroth)">@(!x.Goroth)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss2">
+                                <option value="@x.Di">@x.Di</option>
+                                <option value="@(!x.Di)">@(!x.Di)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss3">
+                                <option value="@x.Harjatan">@x.Harjatan</option>
+                                <option value="@(!x.Harjatan)">@(!x.Harjatan)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss4">
+                                <option value="@x.Sisters">@x.Sisters</option>
+                                <option value="@(!x.Sisters)">@(!x.Sisters)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss5">
+                                <option value="@x.Host">@x.Host</option>
+                                <option value="@(!x.Host)">@(!x.Host)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss6">
+                                <option value="@x.Mistress">@x.Mistress</option>
+                                <option value="@(!x.Mistress)">@(!x.Mistress)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss7">
+                                <option value="@x.Maiden">@x.Maiden</option>
+                                <option value="@(!x.Maiden)">@(!x.Maiden)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss8">
+                                <option value="@x.FallenAvatar">@x.FallenAvatar</option>
+                                <option value="@(!x.FallenAvatar)">@(!x.FallenAvatar)</option>
                             </select>
                         </td>
                         <td>
-                            <select>
-                                <option value="@x.Goroth">@x.Goroth</option>
-                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            <select id="boss9">
+                                <option value="@x.Kiljaeden">@x.Kiljaeden</option>
+                                <option value="@(!x.Kiljaeden)">@(!x.Kiljaeden)</option>
                             </select>
                         </td>
                         <td>
-                            <input type="button" class="btn btn-success" value="Update" onclick=""/>
+                            <input type="button" class="btn btn-success" value="Update" onclick='UpdateUserBosses("@x.Id")'/>
                         </td>
                     </tr>
                 }

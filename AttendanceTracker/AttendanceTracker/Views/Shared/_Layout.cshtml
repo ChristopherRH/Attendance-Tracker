@@ -16,7 +16,16 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Roster List", "RosterList", "Home")</li>
                     <li>@Html.ActionLink("Tables", "Graph", "Home")</li>
-                    <li>@Html.ActionLink("Roster", "RosterInfo", "Home")</li>                   
+                    <li>@Html.ActionLink("Roster", "RosterInfo", "Home")</li>
+                    <li>@Html.ActionLink("Loot List", "Bosses", "Account")</li>
+                    @{
+                        if (Session["UserName"] == null)
+                        {
+                            <li>@Html.ActionLink("Create Account", "Index", "Account")</li>
+                            <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                        }
+                    }
+                    }
                 </ul>
             </div>
         </div>

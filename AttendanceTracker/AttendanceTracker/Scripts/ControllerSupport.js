@@ -219,7 +219,7 @@ function CreateAccount() {
         div.append("Password Required");
         clientErrors = true;
     }
-    else if (password !== passwordVerify) {        
+    else if (password !== passwordVerify) {
         div.append("Passwords do not match\n");
         clientErrors = true;
     }
@@ -295,4 +295,56 @@ function Login() {
             }
         });
     }
+}
+
+
+// update the controller module
+function UpdateUserBosses(id) {
+    div = $(".validation");
+    div.empty();
+    var goroth = $("#boss1 option:selected").text();
+    var di = $("#boss2 option:selected").text();
+    var harj = $("#boss3 option:selected").text();
+    var sisters = $("#boss4 option:selected").text();
+    var host = $("#boss5 option:selected").text();
+    var mistress = $("#boss6 option:selected").text();
+    var maiden = $("#boss7 option:selected").text();
+    var fa = $("#boss8 option:selected").text();
+    var kj = $("#boss9 option:selected").text();
+
+    var submit =
+        '{id: "' + id +
+        '", goroth: "' + goroth +
+        '", di: "' + di +
+        '", harj: "' + harj +
+        '", sisters: "' + sisters +
+        '", host: "' + host +
+        '", mistress: "' + mistress +
+        '", maiden: "' + maiden +
+        '", fa: "' + fa +
+        '", kj: "' + kj + '" }';
+    $.ajax({
+        type: "POST",
+        url: 'UpdateBosses',
+        data: submit,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.indexOf("ERROR") !== -1) {
+
+                div = $(".validation");
+                div.empty();
+                div.append("INVALID PASSWORD OR MISSING DATA");
+            }
+            else {
+                location.reload();
+            }
+        },
+        error: function (response) {
+            alert("error occurred. Tell Chiaki");
+        },
+        failure: function (response) {
+            alert("failure occurred. Tell Chiaki");
+        }
+    });
 }

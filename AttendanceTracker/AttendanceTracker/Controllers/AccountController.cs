@@ -1,4 +1,5 @@
-﻿using FireSharp;
+﻿using AttendanceTracker.Models;
+using FireSharp;
 using FireSharp.Config;
 using System;
 using System.Linq;
@@ -84,6 +85,7 @@ namespace AttendanceTracker.Controllers
 
             return Json("");
         }
+
         [HttpPost]
         public JsonResult Login(string name, string password)
         {
@@ -112,6 +114,34 @@ namespace AttendanceTracker.Controllers
 
             // set the username for this session
             Session["UserName"] = name;
+            return Json("");
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBosses(string id, string goroth, string di, string harj, string sisters, string host, string mistress, string maiden, string fa, string kj)
+        {
+            var list = GetUserBosses();
+            var user = list.FirstOrDefault(x => x.Id.Equals(id));
+            if(user == null)
+            {
+                return Json("ERROR: An error occurred");
+            }
+            var update = new BossesNeeded
+            {
+                User =  user.User,
+                Goroth = Boolean.Parse(goroth),
+                Di = Boolean.Parse(di),
+                Harjatan = Boolean.Parse(harj),
+                Sisters = Boolean.Parse(sisters),
+                Host = Boolean.Parse(host),
+                Mistress = Boolean.Parse(mistress),
+                Maiden = Boolean.Parse(maiden),
+                FallenAvatar = Boolean.Parse(fa),
+                Kiljaeden = Boolean.Parse(kj)
+            };
+
+            _client.UpdateAsync($"bosses/{id}", update).Wait();
+
             return Json("");
         }
     }
