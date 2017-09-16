@@ -1,4 +1,5 @@
 ﻿var table;
+var div = $(".validation");
 var weekday = new Array(7);
 weekday[0] = "Sunday";
 weekday[1] = "Monday";
@@ -21,7 +22,7 @@ $(document).ready(function () {
         var urldir = window.location.pathname.split("Home");
         var urlPath = "Home/ValidatePasswordSalt";
         if (urldir.length > 1) {
-            var urlPath = "ValidatePasswordSalt";
+            urlPath = "ValidatePasswordSalt";
         }
         $.ajax({
             type: "POST",
@@ -33,13 +34,13 @@ $(document).ready(function () {
                 var parsed = JSON.parse(response);
                 var valid = parsed["isValid"];
                 if (valid === "false") {
-                    var div = $(".validation");
+                    div = $(".validation");
                     div.empty();
                     div.append("INVALID PASSWORD OR MISSING DATA");
                 }
                 // validation passed, successful.
                 else {
-                    var div = $(".validation");
+                    div = $(".validation");
                     div.empty();
                     table
                         .row($(rowDelete).parents('tr'))
@@ -47,7 +48,7 @@ $(document).ready(function () {
                         .draw();
                 }
             }
-        })
+        });
     });
 });
 // delete player from attendance list
@@ -61,15 +62,15 @@ function DeleteMethod(id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.indexOf("ERROR") != -1) {
+            if (response.indexOf("ERROR") !== -1) {
 
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
             }
         },
@@ -79,7 +80,7 @@ function DeleteMethod(id) {
         failure: function (response) {
             alert("failure occurred. Tell Chiaki");
         }
-    })
+    });
 }
 
 // Add a player's attendace to the attendance list
@@ -96,15 +97,15 @@ function CallMethod() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.indexOf("ERROR") != -1) {
+            if (response.indexOf("ERROR") !== -1) {
 
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
                 var parsed = JSON.parse(response);
                 var nameAdd = parsed["Name"];
@@ -125,7 +126,7 @@ function CallMethod() {
         failure: function (response) {
             alert("failure occurred. Tell Chiaki");
         }
-    })
+    });
 }
 
 // Add a player to the roster
@@ -141,15 +142,15 @@ function AddPlayerRoster() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.indexOf("ERROR") != -1) {
+            if (response.indexOf("ERROR") !== -1) {
 
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
                 var parsed = JSON.parse(response);
                 var nameAdd = parsed["Name"];
@@ -166,7 +167,7 @@ function AddPlayerRoster() {
         failure: function (response) {
             alert("failure occurred. Tell Chiaki");
         }
-    })
+    });
 }
 
 // delete player from the roster
@@ -180,15 +181,15 @@ function DeletePlayerRoster(id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            if (response.indexOf("ERROR") != -1) {
+            if (response.indexOf("ERROR") !== -1) {
 
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                var div = $(".validation");
+                div = $(".validation");
                 div.empty();
             }
         },
@@ -198,5 +199,100 @@ function DeletePlayerRoster(id) {
         failure: function (response) {
             alert("failure occurred. Tell Chiaki");
         }
-    })
+    });
+}
+
+// Create an account
+function CreateAccount() {
+    div = $(".validation");
+    div.empty();
+    var name = $("#username").val();
+    var password = $("#password").val();
+    var passwordVerify = $("#password-verify").val();
+    var clientErrors = false;
+    // client side validation
+    if (name.length === 0) {
+        div.append("Username Required\n");
+        clientErrors = true;
+    }
+    else if (password.length === 0) {
+        div.append("Password Required");
+        clientErrors = true;
+    }
+    else if (password !== passwordVerify) {        
+        div.append("Passwords do not match\n");
+        clientErrors = true;
+    }
+    if (!clientErrors) {
+        var submit = '{name: "' + name + '", password: "' + password + '", passwordVerify: "' + passwordVerify + '" }';
+        $.ajax({
+            type: "POST",
+            url: 'Account/CreateAccount',
+            data: submit,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.indexOf("ERROR") !== -1) {
+
+                    div = $(".validation");
+                    div.empty();
+                    div.append("INVALID PASSWORD OR MISSING DATA");
+                }
+                else {
+                    window.location = 'Account/Login';
+                }
+            },
+            error: function (response) {
+                alert("error occurred. Tell Chiaki");
+            },
+            failure: function (response) {
+                alert("failure occurred. Tell Chiaki");
+            }
+        });
+    }
+}
+
+// Account login
+function Login() {
+    div = $(".validation");
+    div.empty();
+    var name = $("#username").val();
+    var password = $("#password").val();
+    var clientErrors = false;
+    // client side validation
+    if (name.length === 0) {
+        div.append("Username Required\n");
+        clientErrors = true;
+    }
+    else if (password.length === 0) {
+        div.append("Password Required");
+        clientErrors = true;
+    }
+    if (!clientErrors) {
+        var submit = '{name: "' + name + '", password: "' + password + '" }';
+        $.ajax({
+            type: "POST",
+            url: 'Login',
+            data: submit,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.indexOf("ERROR") !== -1) {
+
+                    div = $(".validation");
+                    div.empty();
+                    div.append("INVALID PASSWORD OR MISSING DATA");
+                }
+                else {
+                    window.location = 'Bosses';
+                }
+            },
+            error: function (response) {
+                alert("error occurred. Tell Chiaki");
+            },
+            failure: function (response) {
+                alert("failure occurred. Tell Chiaki");
+            }
+        });
+    }
 }

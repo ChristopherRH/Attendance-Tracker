@@ -1,0 +1,15 @@
+﻿@using AttendanceTracker.Controllers;
+@model string
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/datepicker.css" />
+@{var controller = (AccountController)ViewContext.Controller; }
+<h1>Account Creation</h1>
+<span class="validation alert-danger"></span>
+<input type="text" id="username" class="form-control" placeholder="Username">
+<input type="password" id="password" class="form-control" placeholder="Password">
+<input type="password" id="password-verify" class="form-control" placeholder="Password Verify">
+<br />
+<input type="button" class="btn btn-success" id="btnGet" value="Submit" onclick="CreateAccount();" />
