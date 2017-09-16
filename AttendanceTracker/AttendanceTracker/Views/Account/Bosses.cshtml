@@ -82,17 +82,16 @@
                 else
                 {
                     <tr>
-                        @* change to yes/no with: @(x.Goroth.isTrue?"Yes":"No")*@
                         <td>@x.User</td>
-                        <td style="color:@Html.Raw((x.Goroth) ? "green" : "red")">@x.Goroth</td>
-                        <td style="color:@Html.Raw((x.Di) ? "green" : "green")">@x.Di</td>
-                        <td style="color:@Html.Raw((x.Harjatan) ? "green" : "red")">@x.Harjatan</td>
-                        <td style="color:@Html.Raw((x.Sisters) ? "green" : "red")">@x.Sisters</td>
-                        <td style="color:@Html.Raw((x.Host) ? "green" : "red")">@x.Host</td>
-                        <td style="color:@Html.Raw((x.Mistress) ? "green" : "red")">@x.Mistress</td>
-                        <td style="color:@Html.Raw((x.Maiden) ? "green" : "red")">@x.Maiden</td>
-                        <td style="color:@Html.Raw((x.FallenAvatar) ? "green" : "red")">@x.FallenAvatar</td>
-                        <td style="color:@Html.Raw((x.Kiljaeden) ? "green" : "red")">@x.Kiljaeden</td>
+                        <td style="color:@Html.Raw((x.Goroth) ? "green" : "red")">@(x.Goroth ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.Di) ? "green" : "green")">@(x.Di ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.Harjatan) ? "green" : "red")">@(x.Harjatan ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.Sisters) ? "green" : "red")">@(x.Sisters ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.Host) ? "green" : "red")">@(x.Host ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.Mistress) ? "green" : "red")">@(x.Mistress ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.Maiden) ? "green" : "red")">@(x.Maiden ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.FallenAvatar) ? "green" : "red")">@(x.FallenAvatar ? "Yes" : "No")</td>
+                        <td style="color:@Html.Raw((x.Kiljaeden) ? "green" : "red")">@(x.Kiljaeden ? "Yes" : "No")</td>
                         <td></td>
                     </tr>
                 }
