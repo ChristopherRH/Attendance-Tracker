@@ -16,7 +16,7 @@
             var controller = (AccountController)ViewContext.Controller;
             foreach (var x in list)
             {
-                if (loginAs != null && x.User.Equals(loginAs.ToString()))
+                if (loginAs != null && x.User.Equals(loginAs.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     <tr>
                         <td>@x.User</td>
@@ -82,16 +82,17 @@
                 else
                 {
                     <tr>
+                        @* change to yes/no with: @(x.Goroth.isTrue?"Yes":"No")*@
                         <td>@x.User</td>
-                        <td style="color:@Html.Raw((x.Goroth) ? "red" : "green")">@x.Goroth</td>
-                        <td style="color:@Html.Raw((x.Di) ? "red" : "green")">@x.Di</td>
-                        <td style="color:@Html.Raw((x.Harjatan) ? "red" : "green")">@x.Harjatan</td>
-                        <td style="color:@Html.Raw((x.Sisters) ? "red" : "green")">@x.Sisters</td>
-                        <td style="color:@Html.Raw((x.Host) ? "red" : "green")">@x.Host</td>
-                        <td style="color:@Html.Raw((x.Mistress) ? "red" : "green")">@x.Mistress</td>
-                        <td style="color:@Html.Raw((x.Maiden) ? "red" : "green")">@x.Maiden</td>
-                        <td style="color:@Html.Raw((x.FallenAvatar) ? "red" : "green")">@x.FallenAvatar</td>
-                        <td style="color:@Html.Raw((x.Kiljaeden) ? "red" : "green")">@x.Kiljaeden</td>
+                        <td style="color:@Html.Raw((x.Goroth) ? "green" : "red")">@x.Goroth</td>
+                        <td style="color:@Html.Raw((x.Di) ? "green" : "green")">@x.Di</td>
+                        <td style="color:@Html.Raw((x.Harjatan) ? "green" : "red")">@x.Harjatan</td>
+                        <td style="color:@Html.Raw((x.Sisters) ? "green" : "red")">@x.Sisters</td>
+                        <td style="color:@Html.Raw((x.Host) ? "green" : "red")">@x.Host</td>
+                        <td style="color:@Html.Raw((x.Mistress) ? "green" : "red")">@x.Mistress</td>
+                        <td style="color:@Html.Raw((x.Maiden) ? "green" : "red")">@x.Maiden</td>
+                        <td style="color:@Html.Raw((x.FallenAvatar) ? "green" : "red")">@x.FallenAvatar</td>
+                        <td style="color:@Html.Raw((x.Kiljaeden) ? "green" : "red")">@x.Kiljaeden</td>
                         <td></td>
                     </tr>
                 }
