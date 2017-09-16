@@ -20,7 +20,8 @@ namespace AttendanceTracker.Controllers
         {
             var config = new FirebaseConfig()
             {
-                BasePath = "https://attendance-7f6fe.firebaseio.com/"
+                BasePath = "https://attendance-7f6fe.firebaseio.com/",
+                AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
             };
             _client = new FirebaseClient(config);
         }
