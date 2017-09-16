@@ -24,6 +24,10 @@
                             <li>@Html.ActionLink("Create Account", "Index", "Account")</li>
                             <li>@Html.ActionLink("Login", "Login", "Account")</li>
                         }
+                        else
+                        {
+                            <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
+                        }
                     }
                     }
                 </ul>

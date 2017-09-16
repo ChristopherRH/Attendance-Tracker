@@ -38,6 +38,13 @@ namespace AttendanceTracker.Controllers
             return View(list);
         }
 
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            Session.Abandon();
+            return View();
+        }
+
         [HttpPost]
         public JsonResult CreateAccount(string name, string password, string passwordVerify)
         {
