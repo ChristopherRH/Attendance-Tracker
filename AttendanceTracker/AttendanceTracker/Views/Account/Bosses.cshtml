@@ -2,7 +2,113 @@
     ViewBag.Title = "Table Results";
 }
 <h1>Bosses</h1>
+@using AttendanceTracker.Controllers;
+
+@model  IEnumerable<AttendanceTracker.Models.BossesNeeded>
+@{
+    var list = Model;
+    var loginAs = Session["UserName"] ?? null;
+}
+<table class="table table-striped" id="attendance">
+    <thead><tr><th>Name</th><th>Goroth</th><th>Demonic Inquisition</th><th>Harjatan</th><th>Sisters of the Moon</th><th>Desolate Host</th><th>Misstress Sassz'ine</th><th>Maiden of Vigilance</th><th>Fallen Avatar</th><th>Kil'Jaeden</th><td></td></tr></thead>
+    <tbody>
+        @{
+            var controller = (AccountController)ViewContext.Controller;
+            foreach (var x in list)
+            {
+                if (loginAs != null && x.User.Equals(loginAs.ToString()))
+                {
+                    <tr>
+                        <td>@x.User</td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="@x.Goroth">@x.Goroth</option>
+                                <option value="@(!x.Goroth)">@(!x.Goroth)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-success" value="Update" onclick=""/>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>@x.User</td>
+                        <td>@x.Goroth</td>
+                        <td>@x.Di</td>
+                        <td>@x.Harjatan</td>
+                        <td>@x.Sisters</td>
+                        <td>@x.Host</td>
+                        <td>@x.Mistress</td>
+                        <td>@x.Maiden</td>
+                        <td>@x.FallenAvatar</td>
+                        <td>@x.Kiljaeden</td>
+                        <td></td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
 
 
+@{
 
-<footer>Logged in as: @Session["UserName"].ToString()</footer>
+    if (loginAs == null)
+    {
+        <footer>Not Logged In</footer>
+    }
+    else
+    {
+        <footer>Logged in as: @loginAs.ToString()</footer>
+    }
+}
