@@ -161,34 +161,13 @@ namespace AttendanceTracker.Controllers
             {
                 // the id of each player in db
                 var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
-                var goroth = split.Substring(split.IndexOf("Goroth") + "Goroth".Length, 6).IndexOf(needs) != -1;
-                var di = split.Substring(split.IndexOf("DI") + "DI".Length, 6).IndexOf(needs) != -1;
-                var harj = split.Substring(split.IndexOf("Harjatan") + "Harjatan".Length, 6).IndexOf(needs) != -1;
-                var sisters = split.Substring(split.IndexOf("Sisters") + "Sisters".Length, 6).IndexOf(needs) != -1;
-                var host = split.Substring(split.IndexOf("Host") + "Host".Length, 6).IndexOf(needs) != -1;
-                var mistress = split.Substring(split.IndexOf("Mistress") + "Mistress".Length, 6).IndexOf(needs) != -1;
-                var maiden = split.Substring(split.IndexOf("Maiden") + "Maiden".Length, 6).IndexOf(needs) != -1;
-                var fa = split.Substring(split.IndexOf("FallenAvatar") + "FallenAvatar".Length, 6).IndexOf(needs) != -1;
-                var kj = split.Substring(split.IndexOf("Kiljaeden") + "Kiljaeden".Length, 6).IndexOf(needs) != -1;
-                var player = split.Split(new string[] { "User" }, StringSplitOptions.None);
-                var name = player[1].Substring(3, player[1].Length - 6);
-                               
-                var bossNeeds = new BossesNeeded()
-                {
-                    Id = $"-{id}",
-                    Goroth = goroth,
-                    Di = di,
-                    Harjatan = harj,
-                    Sisters = sisters,
-                    Host = host,
-                    Mistress = mistress,
-                    Maiden = maiden,
-                    FallenAvatar = fa,
-                    Kiljaeden = kj,
-                    User = name
-                };
 
-                list.Add(bossNeeds);
+                // split to get teh JSON of the rest
+                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
+                var split3 = split2.Substring(0, split2.Length - 1);
+                var bosses = Newtonsoft.Json.JsonConvert.DeserializeObject<BossesNeeded>(split3);
+                bosses.Id = id;
+                list.Add(bosses);
             }
 
             return list;
