@@ -21,11 +21,19 @@ namespace AttendanceTracker
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/respond.js",
+                      "~/Scripts/datepicker.js",
+                      "~/Scripts/ControllerSupport.js",
+                      "~/Scripts/DataTables.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/DataTables.css",
+                      "~/Content/datepicker.css"));
+
+            bundles.UseCdn = true;
+            bundles.Add(new ScriptBundle("~/bundles/firebase", "https://cdn.firebase.com/v0/firebase.js"));
         }
     }
 }
