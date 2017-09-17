@@ -152,7 +152,6 @@ namespace AttendanceTracker.Controllers
 
         public List<BossesNeeded> GetUserBosses()
         {
-            var needs = "true";
             var list = new List<BossesNeeded>();
             var results = _client.Get("bosses");
             var userBosses = results.Body;
@@ -172,7 +171,7 @@ namespace AttendanceTracker.Controllers
 
             return list;
         }
-
+    
         public static bool FromString(string str)
         {
             return Convert.ToBoolean(Enum.Parse(typeof(BooleanAliases), str));

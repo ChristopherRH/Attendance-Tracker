@@ -148,7 +148,7 @@ namespace AttendanceTracker.Controllers
                 Kiljaeden =     FromString(kj)
             };
 
-            _client.UpdateAsync($"bosses/{id}", update).Wait();
+            _client.UpdateAsync($"bosses/-{id}", update).Wait();
 
             return Json("");
         }
