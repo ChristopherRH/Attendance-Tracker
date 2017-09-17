@@ -8,33 +8,31 @@
 <h2>@ViewBag.Title.</h2>
 @{var list = Model; }
 <h3>Occurrences</h3>
-<table class="table hover" id="attendance">
+<table class="table table-striped searchable" id="attendance">
     <thead><tr><th>Name</th><th>Missed</th><th>Percent</th></tr></thead>
-    <tbody>
-        @{
-            var dict = new Dictionary<string, int>();
-            var controller = (HomeController)ViewContext.Controller;
-            var totalDates = controller.GetTotalDatesLogged(list.ToList());
-            foreach (var x in list)
+    @{
+        var dict = new Dictionary<string, int>();
+        var controller = (HomeController)ViewContext.Controller;
+        var totalDates = controller.GetTotalDatesLogged(list.ToList());
+        foreach (var x in list)
+        {
+            var occurences = controller.GetOccurrences(x.Name, list.ToList());
+            if (!dict.ContainsKey(x.Name))
             {
-                var occurences = controller.GetOccurrences(x.Name, list.ToList());
-                if (!dict.ContainsKey(x.Name))
-                {
-                    dict.Add(x.Name, occurences);
-                }
+                dict.Add(x.Name, occurences);
             }
+        }
 
-            foreach (var d in dict.ToList())
-            {
-                var percent = ((double)(totalDates - d.Value) / (double)totalDates) * 100;
-
+        foreach (var d in dict.ToList())
+        {
+            var percent = ((double)(totalDates - d.Value) / (double)totalDates) * 100;
+            <tbody>
                 <tr>
                     <td>@d.Key</td>
                     <td>@d.Value</td>
                     <td>@((int)percent)%</td>
                 </tr>
-            }
+            </tbody>
         }
-    </tbody>
-
+    }
 </table>
