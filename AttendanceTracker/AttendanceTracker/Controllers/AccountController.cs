@@ -8,8 +8,8 @@ using System.Web.Mvc;
 namespace AttendanceTracker.Controllers
 {
     public class AccountController : BaseController
-    {
-
+    {       
+        
         #region Constructor
         public AccountController()
         {
@@ -87,7 +87,7 @@ namespace AttendanceTracker.Controllers
                 Host = false,
                 Maiden = false,
                 FallenAvatar = false,
-                Kiljaeden = true
+                Kiljaeden = false
             }).Wait();
 
             return Json("");
@@ -133,23 +133,26 @@ namespace AttendanceTracker.Controllers
             {
                 return Json("ERROR: An error occurred");
             }
-            var update = new BossesNeeded
+            
+        var update = new BossesNeeded
             {
-                User =  user.User,
-                Goroth = Boolean.Parse(goroth),
-                Di = Boolean.Parse(di),
-                Harjatan = Boolean.Parse(harj),
-                Sisters = Boolean.Parse(sisters),
-                Host = Boolean.Parse(host),
-                Mistress = Boolean.Parse(mistress),
-                Maiden = Boolean.Parse(maiden),
-                FallenAvatar = Boolean.Parse(fa),
-                Kiljaeden = Boolean.Parse(kj)
+                User =          user.User,
+                Goroth =        FromString(goroth),
+                Di =            FromString(di),
+                Harjatan =      FromString(harj),
+                Sisters =       FromString(sisters),
+                Host =          FromString(host),
+                Mistress =      FromString(mistress),
+                Maiden =        FromString(maiden),
+                FallenAvatar =  FromString(fa),
+                Kiljaeden =     FromString(kj)
             };
 
             _client.UpdateAsync($"bosses/{id}", update).Wait();
 
             return Json("");
         }
+
+        
     }
 }

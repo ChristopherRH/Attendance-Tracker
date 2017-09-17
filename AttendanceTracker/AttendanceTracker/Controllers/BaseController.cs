@@ -13,6 +13,11 @@ namespace AttendanceTracker.Controllers
     public class BaseController : Controller
     {
         public IFirebaseClient _client;
+        public enum BooleanAliases
+        {
+            Yes = 1,
+            No = 0
+        }
 
         #region Public Methods
         public List<PlayerAttendance> GetCurrentDataBase()
@@ -187,6 +192,11 @@ namespace AttendanceTracker.Controllers
             }
 
             return list;
+        }
+
+        public static bool FromString(string str)
+        {
+            return Convert.ToBoolean(Enum.Parse(typeof(BooleanAliases), str));
         }
 
         #endregion
