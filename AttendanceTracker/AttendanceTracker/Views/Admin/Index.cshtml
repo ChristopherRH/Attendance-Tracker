@@ -5,8 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @{var controller = (AdminController)ViewContext.Controller; }
-<br />
-<span class="validation alert-danger"></span>
+
+<h3>Attendance Control</h3>
 <select class="form-control" id="nameInput">
     @{
         foreach (var x in controller.GetCurrentUsers())
