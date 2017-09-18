@@ -21,11 +21,14 @@
                             <li>@Html.ActionLink("Login", "Login", "Account")</li>
                             <li>@Html.ActionLink("Create Account", "Index", "Account")</li>
                         }
-                        else
+                        if (Session["Role"] != null && Session["Role"].Equals("Admin"))
                         {
                             <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
                             <li>@Html.ActionLink("Roster List", "RosterList", "Admin")</li>
                             <li>@Html.ActionLink("Roster Configuration", "BossListConfiguration", "Admin")</li>
+                        }
+                        if(Session["UserName"] != null)
+                        {
                             <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
                         }
                     }

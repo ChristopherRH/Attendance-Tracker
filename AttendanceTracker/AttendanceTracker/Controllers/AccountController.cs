@@ -113,7 +113,8 @@ namespace AttendanceTracker.Controllers
             }
 
             // set the username for this session
-            Session["UserName"] = name;
+            Session["UserName"] = account.Name;
+            Session["Role"] = account.Role;
             return Json("");
         }
 
