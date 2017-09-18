@@ -122,23 +122,23 @@ namespace AttendanceTracker.Controllers
         {
             var list = GetUserBosses();
             var user = list.FirstOrDefault(x => x.Id.Equals(id));
-            if(user == null)
+            if (user == null)
             {
                 return Json("ERROR: An error occurred");
             }
-            
-        var update = new BossesNeeded
+
+            var update = new BossesNeeded
             {
-                User =          user.User,
-                Goroth =        FromString(goroth),
-                Di =            FromString(di),
-                Harjatan =      FromString(harj),
-                Sisters =       FromString(sisters),
-                Host =          FromString(host),
-                Mistress =      FromString(mistress),
-                Maiden =        FromString(maiden),
-                FallenAvatar =  FromString(fa),
-                Kiljaeden =     FromString(kj)
+                User = user.User,
+                Goroth = FromString(goroth),
+                Di = FromString(di),
+                Harjatan = FromString(harj),
+                Sisters = FromString(sisters),
+                Host = FromString(host),
+                Mistress = FromString(mistress),
+                Maiden = FromString(maiden),
+                FallenAvatar = FromString(fa),
+                Kiljaeden = FromString(kj)
             };
 
             _client.UpdateAsync($"bosses/-{id}", update).Wait();

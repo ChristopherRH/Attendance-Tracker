@@ -253,7 +253,7 @@ function Login() {
     }
 }
 
-// update the controller module
+// update the user bosses
 function UpdateUserBosses(id) {
     div.empty();
     var goroth = $("#boss1 option:selected").text();
@@ -286,6 +286,35 @@ function UpdateUserBosses(id) {
         success: function (response) {
             if (response.indexOf("ERROR") !== -1) {
 
+                div.empty();
+                div.append("INVALID PASSWORD OR MISSING DATA");
+            }
+            else {
+                location.reload();
+            }
+        },
+        error: function (response) {
+            alert("error occurred. Tell Chiaki");
+        },
+        failure: function (response) {
+            alert("failure occurred. Tell Chiaki");
+        }
+    });
+}
+
+// update the user bosses
+function UpdateBossesConfiguration(id) {
+    div.empty();
+    var highlighted = $("#" + id + " option:selected").text();
+    var submit = '{id: "' + id + '", highlighted: "' + highlighted + '" }';
+    $.ajax({
+        type: "POST",
+        url: 'UpdateBossesConfiguration',
+        data: submit,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.indexOf("ERROR") !== -1) {
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }

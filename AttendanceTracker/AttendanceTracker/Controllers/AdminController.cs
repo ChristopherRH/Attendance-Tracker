@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AttendanceTracker.Models;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -25,6 +26,18 @@ namespace AttendanceTracker.Controllers
             if (UserAuthorized())
             {
                 return View();
+            }
+
+            // return unauthorized
+            return Redirect("Admin/NotAuthorized");
+        }
+
+        public ActionResult BossListConfiguration()
+        {
+            if (UserAuthorized())
+            {
+                var list = GetUserBosses();
+                return View(list);
             }
 
             // return unauthorized
@@ -161,6 +174,11 @@ namespace AttendanceTracker.Controllers
             return Json(json);
         }
 
+        /// <summary>
+        /// Attempts to delete a player from the roster list
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult DeletePlayerRoster(string id)
         {
@@ -174,6 +192,22 @@ namespace AttendanceTracker.Controllers
             _client.Delete("roster/" + id);
             var json = JsonConvert.SerializeObject(player);
             return Json(json);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBossesConfiguration(string id, string highlighted)
+        {
+            var list = GetUserBosses();
+            var user = list.FirstOrDefault(x => x.Id.Equals(id));
+            if (user == null)
+            {
+                return Json(JsonConvert.SerializeObject(msg));
+            }
+
+            user.Highlighted = FromString(highlighted);
+            _client.UpdateAsync($"bosses/-{id}", user).Wait();
+
+            return Json("");
         }
     }
 }

@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Table Results";
+}
+<h1>Bosses</h1>
+@using AttendanceTracker.Controllers;
+
+@model  IEnumerable<AttendanceTracker.Models.BossesNeeded>
+@{
+    var list = Model;
+    var loginAs = Session["UserName"] ?? null;
+}
+<table class="table" id="attendance">
+    <thead><tr><th>Name</th><th>Highlighted</th><th></th></tr></thead>
+    <tbody>
+        @{
+            var controller = (AdminController)ViewContext.Controller;
+            foreach (var x in list)
+            {
+                <tr>
+                    <td>@x.User</td>
+                    @{
+                        var id = x.Id;
+                        var value = x.GetType().GetProperty("Highlighted").GetValue(x, null).ToString();
+                        <td>
+                            <select id="@id">
+                                <option>@(value.Equals("true", StringComparison.CurrentCultureIgnoreCase) ? "Yes" : "No")</option>
+                                <option>@(value.Equals("true", StringComparison.CurrentCultureIgnoreCase) ? "No" : "Yes")</option>
+                            </select>
+                        </td>
+                    }
+
+                    <td>
+                        <button class="btn btn-success" onclick='UpdateBossesConfiguration("@x.Id")'>Save</button>
+                    </td>
+                </tr>
+                }
+        }
+    </tbody>
+</table>

@@ -27,11 +27,11 @@ namespace AttendanceTracker.Controllers
             var config = new FirebaseConfig()
             {
                 // prod TODO: move this to webconfig
-                //BasePath = "https://attendance-7f6fe.firebaseio.com/",
-                //AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
+                BasePath = "https://attendance-7f6fe.firebaseio.com/",
+                AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
 
                 // test
-                BasePath = "https://paladin-comments.firebaseio.com/"
+                //BasePath = "https://paladin-comments.firebaseio.com/"
             };
             _client = new FirebaseClient(config);
         }
