@@ -12,19 +12,19 @@
         <div class="container">
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Roster List", "RosterList", "Home")</li>
-                    <li>@Html.ActionLink("Tables", "Graph", "Home")</li>
-                    <li>@Html.ActionLink("Roster", "RosterInfo", "Home")</li>
+                    <li>@Html.ActionLink("Attendance", "Index", "Home")</li>
                     <li>@Html.ActionLink("Loot List", "Bosses", "Account")</li>
+                    <li>@Html.ActionLink("Roster", "RosterInfo", "Home")</li>
                     @{
                         if (Session["UserName"] == null)
                         {
-                            <li>@Html.ActionLink("Create Account", "Index", "Account")</li>
                             <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                            <li>@Html.ActionLink("Create Account", "Index", "Account")</li>
                         }
                         else
                         {
+                            <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
+                            <li>@Html.ActionLink("Roster List", "RosterList", "Admin")</li>
                             <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
                         }
                     }

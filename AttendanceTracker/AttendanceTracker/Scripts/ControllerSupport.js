@@ -17,60 +17,31 @@ $(document).ready(function () {
     // this is strictly a visual on the datatables, so it's ok if someone fucks with it
     $('#attendance tbody').on('click', 'input', function () {
         var rowDelete = $(this);
-        var password = $("#password").val();
-        var submit = '{password: "' + password + '" }';
-        var urldir = window.location.pathname.split("Home");
-        var urlPath = "Home/ValidatePasswordSalt";
-        if (urldir.length > 1) {
-            urlPath = "ValidatePasswordSalt";
-        }
-        $.ajax({
-            type: "POST",
-            url: urlPath,
-            data: submit,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                var parsed = JSON.parse(response);
-                var valid = parsed["isValid"];
-                if (valid === "false") {
-                    div = $(".validation");
-                    div.empty();
-                    div.append("INVALID PASSWORD OR MISSING DATA");
-                }
-                // validation passed, successful.
-                else {
-                    div = $(".validation");
-                    div.empty();
-                    table
-                        .row($(rowDelete).parents('tr'))
-                        .remove()
-                        .draw();
-                }
-            }
-        });
+        div.empty();
+        table
+            .row($(rowDelete).parents('tr'))
+            .remove()
+            .draw();
     });
 });
+
 // delete player from attendance list
-function DeleteMethod(id) {
-    var password = $("#password").val();
-    var submit = '{id: "' + id + '", password: "' + password + '" }';
+function DeletePlayerAttendance(id) {
+    var submit = '{id: "' + id + '" }';
     $.ajax({
         type: "POST",
-        url: 'Home/DeletePlayer',
+        url: 'Admin/DeletePlayerAttendance',
         data: submit,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
             if (response.indexOf("ERROR") !== -1) {
 
-                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                div = $(".validation");
                 div.empty();
             }
         },
@@ -84,28 +55,25 @@ function DeleteMethod(id) {
 }
 
 // Add a player's attendace to the attendance list
-function CallMethod() {
+function AddPlayerAttendance() {
     var name = $("#nameInput").val();
     var date = $("#messageInput").val();
-    var password = $("#password").val();
 
-    var submit = '{name: "' + name + '", date: "' + date + '", password: "' + password + '" }';
+    var submit = '{name: "' + name + '", date: "' + date + '" }';
     $.ajax({
         type: "POST",
-        url: 'Home/SubmitMethod',
+        url: 'Admin/AddPlayerAttendance',
         data: submit,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
             if (response.indexOf("ERROR") !== -1) {
 
-                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                div = $(".validation");
                 div.empty();
                 var parsed = JSON.parse(response);
                 var nameAdd = parsed["Name"];
@@ -116,7 +84,7 @@ function CallMethod() {
                     nameAdd,
                     date.toLocaleString().split(',')[0],
                     weekday[date.getDay()],
-                    '<input type="button" class="btn btn-danger" onclick=\'DeleteMethod("' + idAdd + '");\' value="Delete" />'
+                    '<input type="button" class="btn btn-danger" onclick=\'DeletePlayerAttendance("' + idAdd + '");\' value="Delete" />'
                 ]).draw(false);
             }
         },
@@ -132,9 +100,8 @@ function CallMethod() {
 // Add a player to the roster
 function AddPlayerRoster() {
     var name = $("#nameInput").val();
-    var password = $("#password").val();
 
-    var submit = '{name: "' + name + '", password: "' + password + '" }';
+    var submit = '{name: "' + name + '" }';
     $.ajax({
         type: "POST",
         url: 'AddPlayerRoster',
@@ -143,14 +110,11 @@ function AddPlayerRoster() {
         dataType: "json",
         success: function (response) {
             if (response.indexOf("ERROR") !== -1) {
-
-                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                div = $(".validation");
                 div.empty();
                 var parsed = JSON.parse(response);
                 var nameAdd = parsed["Name"];
@@ -172,8 +136,7 @@ function AddPlayerRoster() {
 
 // delete player from the roster
 function DeletePlayerRoster(id) {
-    var password = $("#password").val();
-    var submit = '{id: "' + id + '", password: "' + password + '" }';
+    var submit = '{id: "' + id + '" }';
     $.ajax({
         type: "POST",
         url: 'DeletePlayerRoster',
@@ -182,14 +145,11 @@ function DeletePlayerRoster(id) {
         dataType: "json",
         success: function (response) {
             if (response.indexOf("ERROR") !== -1) {
-
-                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }
             // validation passed, successful.
             else {
-                div = $(".validation");
                 div.empty();
             }
         },
@@ -204,7 +164,6 @@ function DeletePlayerRoster(id) {
 
 // Create an account
 function CreateAccount() {
-    div = $(".validation");
     div.empty();
     var name = $("#username").val();
     var password = $("#password").val();
@@ -234,7 +193,6 @@ function CreateAccount() {
             success: function (response) {
                 if (response.indexOf("ERROR") !== -1) {
 
-                    div = $(".validation");
                     div.empty();
                     div.append("INVALID PASSWORD OR MISSING DATA");
                 }
@@ -254,7 +212,6 @@ function CreateAccount() {
 
 // Account login
 function Login() {
-    div = $(".validation");
     div.empty();
     var name = $("#username").val();
     var password = $("#password").val();
@@ -279,7 +236,6 @@ function Login() {
             success: function (response) {
                 if (response.indexOf("ERROR") !== -1) {
 
-                    div = $(".validation");
                     div.empty();
                     div.append("INVALID PASSWORD OR MISSING DATA");
                 }
@@ -297,10 +253,8 @@ function Login() {
     }
 }
 
-
 // update the controller module
 function UpdateUserBosses(id) {
-    div = $(".validation");
     div.empty();
     var goroth = $("#boss1 option:selected").text();
     var di = $("#boss2 option:selected").text();
@@ -332,7 +286,6 @@ function UpdateUserBosses(id) {
         success: function (response) {
             if (response.indexOf("ERROR") !== -1) {
 
-                div = $(".validation");
                 div.empty();
                 div.append("INVALID PASSWORD OR MISSING DATA");
             }

@@ -1,6 +1,40 @@
-﻿@{
+﻿@using AttendanceTracker.Controllers;
+@model  IEnumerable<AttendanceTracker.Models.PlayerAttendance>
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@{var controller = (AdminController)ViewContext.Controller; }
+<br />
+<span class="validation alert-danger"></span>
+<select class="form-control" id="nameInput">
+    @{
+        foreach (var x in controller.GetCurrentRoster())
+        {
+            <option value="@x.Name">@x.Name</option>
+        }
+    }
+</select>
+<input class="datepicker form-control" type="text" id="messageInput" placeholder="Select Date">
+<br /><br />
+<input type="button" class="btn btn-success" id="btnGet" value="Submit" onclick="AddPlayerAttendance();" />
 
-<h1>Admin Page</h1>
+<hr />
+<div id="messagesDiv" class="searchable">
+    <table class="table table-striped" id="attendance">
+        <thead><tr><th>Name</th><th>Date</th><th>Day</th><th></th></tr></thead>
+        <tbody>
+            @{
+                foreach (var x in controller.GetCurrentDataBase())
+                {
+                    <tr>
+                        <td>@x.Name</td>
+                        <td>@x.Date.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@x.Date.Value.DayOfWeek</td>
+                        <td><input type="button" class="btn btn-danger" onclick='DeletePlayerAttendance("@x.Id");' value="Delete" /></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

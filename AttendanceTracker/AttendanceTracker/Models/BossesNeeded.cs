@@ -4,6 +4,7 @@
     {
         public string Id { get; set; }
         public string User { get; set; }
+        public bool Highlighted { get; set; }
         public bool Goroth { get; set; }
         public bool Di { get; set; }
         public bool Harjatan { get; set; }
