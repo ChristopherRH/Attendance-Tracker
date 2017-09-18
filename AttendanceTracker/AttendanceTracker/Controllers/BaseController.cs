@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace AttendanceTracker.Controllers
@@ -26,12 +27,8 @@ namespace AttendanceTracker.Controllers
         {
             var config = new FirebaseConfig()
             {
-                // prod TODO: move this to webconfig
-                BasePath = "https://attendance-7f6fe.firebaseio.com/",
-                AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
-
-                // test
-                //BasePath = "https://paladin-comments.firebaseio.com/"
+                BasePath = WebConfigurationManager.AppSettings["FirebasePath"],
+                AuthSecret = WebConfigurationManager.AppSettings["FirebaseAuth"]
             };
             _client = new FirebaseClient(config);
         }
@@ -137,22 +134,6 @@ namespace AttendanceTracker.Controllers
         }
 
         /// <summary>
-        /// Caluclate a basic hash
-        /// </summary>
-        /// <param name="read"></param>
-        /// <returns></returns>
-        public static UInt64 CalculateHash(string read)
-        {
-            UInt64 hashedValue = 3074457345618258791ul;
-            for (int i = 0; i < read.Length; i++)
-            {
-                hashedValue += read[i];
-                hashedValue *= 3074457345618258799ul;
-            }
-            return hashedValue;
-        }
-
-        /// <summary>
         /// Calculate an MD5 hash
         /// </summary>
         /// <param name="input"></param>
@@ -235,6 +216,9 @@ namespace AttendanceTracker.Controllers
         /// <returns></returns>
         public static bool FromString(string str)
         {
+            if (!Enum.IsDefined(typeof(BooleanAliases), str)){
+                return false;
+            }
             return Convert.ToBoolean(Enum.Parse(typeof(BooleanAliases), str));
         }
 

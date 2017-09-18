@@ -1,5 +1,4 @@
-﻿using AttendanceTracker.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,6 +8,8 @@ namespace AttendanceTracker.Controllers
     public class AdminController : BaseController
     {
         public const string msg = "ERROR: bad data.";
+
+        #region Views
 
         public ActionResult Index()
         {
@@ -48,27 +49,10 @@ namespace AttendanceTracker.Controllers
         {
             return View();
         }
-
-
-        /// <summary>
-        /// Check to see if the logged in user is authorized, or false if not logged in.
-        /// </summary>
-        /// <returns></returns>
-        private bool UserAuthorized()
-        {
-            var role = Session["Role"];
-            if (role == null)
-            {
-                return false;
-            }
-
-            if (!role.Equals("Admin"))
-            {
-                return false;
-            }
-
-            return true;
-        }
+        
+        #endregion
+                
+        #region Verbs
 
         /// <summary>
         /// Checks to see if the user is authorized, and then adds the player to the attendance sheet
@@ -209,5 +193,31 @@ namespace AttendanceTracker.Controllers
 
             return Json("");
         }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Check to see if the logged in user is authorized, or false if not logged in.
+        /// </summary>
+        /// <returns></returns>
+        private bool UserAuthorized()
+        {
+            var role = Session["Role"];
+            if (role == null)
+            {
+                return false;
+            }
+
+            if (!role.Equals("Admin"))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }

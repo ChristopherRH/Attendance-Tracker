@@ -37,6 +37,13 @@ namespace AttendanceTracker.Controllers
 
         #region Verbs
 
+        /// <summary>
+        /// Creates an account
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="password"></param>
+        /// <param name="passwordVerify"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult CreateAccount(string name, string password, string passwordVerify)
         {
@@ -86,6 +93,12 @@ namespace AttendanceTracker.Controllers
             return Json("");
         }
 
+        /// <summary>
+        /// Log the user in and creates a session for the logged in user
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult Login(string name, string password)
         {
@@ -118,6 +131,20 @@ namespace AttendanceTracker.Controllers
             return Json("");
         }
 
+        /// <summary>
+        /// Update the bosses for Tomb of Sargeras
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="goroth"></param>
+        /// <param name="di"></param>
+        /// <param name="harj"></param>
+        /// <param name="sisters"></param>
+        /// <param name="host"></param>
+        /// <param name="mistress"></param>
+        /// <param name="maiden"></param>
+        /// <param name="fa"></param>
+        /// <param name="kj"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult UpdateBosses(string id, string goroth, string di, string harj, string sisters, string host, string mistress, string maiden, string fa, string kj)
         {
