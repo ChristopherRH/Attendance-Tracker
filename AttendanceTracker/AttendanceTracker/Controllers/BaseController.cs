@@ -40,7 +40,7 @@ namespace AttendanceTracker.Controllers
         /// Get the current attendance in the database
         /// </summary>
         /// <returns></returns>
-        public List<PlayerAttendance> GetCurrentDataBase()
+        public List<PlayerAttendance> GetUserAttendance()
         {
             var list = new List<PlayerAttendance>();
             var results = _client.Get("attendance");
@@ -102,6 +102,86 @@ namespace AttendanceTracker.Controllers
         }
 
         /// <summary>
+        /// Get the current users in the database
+        /// </summary>
+        /// <returns></returns>
+        public List<User> GetCurrentUsers()
+        {
+            var list = new List<User>();
+            var results = _client.Get("users");
+            var users = results.Body;
+            var accounts = users.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("password"));
+            foreach (var split in accounts)
+            {
+                // the id of each player in db
+                var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
+
+                // get the name/date now
+                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
+                var split3 = split2.Substring(0, split2.Length - 1);
+                var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(split3);
+                user.Id = $"-{id}";
+                if (string.IsNullOrEmpty(user.Role))
+                {
+                    user.Role = "None";
+                }
+                list.Add(user);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Get the current Roles in the database
+        /// </summary>
+        /// <returns></returns>
+        public List<Roles> GetUserRoles()
+        {
+            var list = new List<Roles>();
+            var results = _client.Get("roles");
+            var roles = results.Body;
+            var roleOptions = roles.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("Role"));
+            foreach (var split in roleOptions)
+            {
+                // the id of each player in db
+                var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
+
+                // get the name/date now
+                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
+                var split3 = split2.Substring(0, split2.Length - 1);
+                var role = Newtonsoft.Json.JsonConvert.DeserializeObject<Roles>(split3);
+                role.Id = $"-{id}";
+                list.Add(role);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Get the boss list that users have specified they need
+        /// </summary>
+        /// <returns></returns>
+        public List<BossesNeeded> GetUserBosses()
+        {
+            var list = new List<BossesNeeded>();
+            var results = _client.Get("bosses");
+            var userBosses = results.Body;
+            var splits = userBosses.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("User"));
+            foreach (var split in splits)
+            {
+                // the id of each player in db
+                var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
+
+                // split to get teh JSON of the rest
+                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
+                var split3 = split2.Substring(0, split2.Length - 1);
+                var bosses = Newtonsoft.Json.JsonConvert.DeserializeObject<BossesNeeded>(split3);
+                bosses.Id = id;
+                list.Add(bosses);
+            }
+
+            return list;
+        }
+        
+        /// <summary>
         /// The total number of dates logged that have been logged, should equal the number of raids
         /// </summary>
         /// <param name="list"></param>
@@ -154,61 +234,6 @@ namespace AttendanceTracker.Controllers
 
         }
 
-        /// <summary>
-        /// Get the current users in the database
-        /// </summary>
-        /// <returns></returns>
-        public List<User> GetCurrentUsers()
-        {
-            var list = new List<User>();
-            var results = _client.Get("users");
-            var users = results.Body;
-            var accounts = users.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("password"));
-            foreach (var split in accounts)
-            {
-                // the id of each player in db
-                var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
-
-                // get the name/date now
-                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
-                var split3 = split2.Substring(0, split2.Length - 1);
-                var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(split3);
-                user.Id = $"-{id}";
-                if (string.IsNullOrEmpty(user.Role))
-                {
-                    user.Role = "None";
-                }
-                list.Add(user);
-            }
-            return list;
-        }
-
-        /// <summary>
-        /// Get the boss list that users have specified they need
-        /// </summary>
-        /// <returns></returns>
-        public List<BossesNeeded> GetUserBosses()
-        {
-            var list = new List<BossesNeeded>();
-            var results = _client.Get("bosses");
-            var userBosses = results.Body;
-            var splits = userBosses.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("User"));
-            foreach (var split in splits)
-            {
-                // the id of each player in db
-                var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
-
-                // split to get teh JSON of the rest
-                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
-                var split3 = split2.Substring(0, split2.Length - 1);
-                var bosses = Newtonsoft.Json.JsonConvert.DeserializeObject<BossesNeeded>(split3);
-                bosses.Id = id;
-                list.Add(bosses);
-            }
-
-            return list;
-        }
-    
         /// <summary>
         /// Take the yes/no values and parse to true/false
         /// </summary>

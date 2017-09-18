@@ -11,7 +11,7 @@ namespace AttendanceTracker.Controllers
 
         public ActionResult Index()
         {
-            var list = GetCurrentDataBase();
+            var list = GetUserAttendance();
             return View(list);
         }
 

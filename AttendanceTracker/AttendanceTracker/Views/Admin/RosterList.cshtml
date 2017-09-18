@@ -13,17 +13,34 @@
 
 <hr />
 
-<div id="messagesDiv" class="searchable">
+<div id="messagesDiv">
     <table class="table hover" id="attendance">
-        <thead><tr><th>Name</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>Role</th><th></th></tr></thead>
         <tbody>
             @{
-
-                foreach (var x in controller.GetCurrentRoster())
+                var roleList = controller.GetUserRoles();
+                foreach (var x in controller.GetCurrentUsers())
                 {
                     <tr>
                         <td>@x.Name</td>
-                        <td><input type="button" class="btn btn-danger" onclick='DeletePlayerRoster("@x.Id");' value="Delete" /></td>
+                        @if (controller.RoleCanBeChanged(x))
+                        {
+                            var tempRoleList = controller.GetRolesForThisUser(roleList.Where(y => !y.Role.Equals(x.Role)));
+                            <td>
+                                <select id="@x.Id">
+                                    <option>@x.Role</option>
+                                    @foreach (var role in tempRoleList)
+                                    {
+                                        <option>@role.Role</option>
+                                    }
+                                </select>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@x.Role</td>
+                        }
+                        <td><button class="btn btn-success" onclick='UpdateUser("@x.Id");' >Save</button></td>
                     </tr>
                 }
             }

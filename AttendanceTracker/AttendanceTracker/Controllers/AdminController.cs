@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using AttendanceTracker.Models;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -49,9 +52,9 @@ namespace AttendanceTracker.Controllers
         {
             return View();
         }
-        
+
         #endregion
-                
+
         #region Verbs
 
         /// <summary>
@@ -88,13 +91,13 @@ namespace AttendanceTracker.Controllers
             }).Wait();
 
 
-            var list = GetCurrentDataBase();
+            var list = GetUserAttendance();
             var player = list.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) &&
                                              x.Date == dt);
             var json = JsonConvert.SerializeObject(player);
             return Json(json);
         }
-        
+
         /// <summary>
         /// Checks to see if the user is authorized, and then deletes the player from the attendance sheet
         /// </summary>
@@ -112,7 +115,7 @@ namespace AttendanceTracker.Controllers
                 return Json(JsonConvert.SerializeObject(msg));
             }
 
-            var list = GetCurrentDataBase();
+            var list = GetUserAttendance();
             var player = list.FirstOrDefault(x => x.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase));
             _client.Delete("attendance/" + id);
             var json = JsonConvert.SerializeObject(player);
@@ -194,6 +197,32 @@ namespace AttendanceTracker.Controllers
             return Json("");
         }
 
+        /// <summary>
+        /// Update the user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="highlighted"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UpdateUser(string id, string role)
+        {
+            var list = GetCurrentUsers();
+            var user = list.FirstOrDefault(x => x.Id.Equals(id));
+            if (user == null)
+            {
+                return Json(JsonConvert.SerializeObject(msg));
+            }
+
+
+            user.Role = role;
+            _client.UpdateAsync($"users/{id}", new
+            {
+                Role = role
+            }).Wait();
+
+            return Json("");
+        }
+
         #endregion
 
         #region Private Methods
@@ -204,18 +233,60 @@ namespace AttendanceTracker.Controllers
         /// <returns></returns>
         private bool UserAuthorized()
         {
+            var authorized = false;
             var role = Session["Role"];
             if (role == null)
             {
                 return false;
             }
 
-            if (!role.Equals("Admin"))
+            if (role.Equals("Admin"))
             {
-                return false;
+                authorized = true;
+            }
+            if (role.Equals("Super"))
+            {
+                authorized = true;
             }
 
-            return true;
+
+            return authorized;
+        }
+
+        /// <summary>
+        /// If this user's role can be changed
+        /// </summary>
+        /// <returns></returns>
+        public bool RoleCanBeChanged(User user)
+        {
+            var currentUserRole = Session["Role"];
+            if (currentUserRole.Equals("Super"))
+            {
+                return true;
+            }
+            if (currentUserRole.Equals("Admin"))
+            {
+                if (user.Role.Equals("Admin"))
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the available this user can set
+        /// </summary>
+        /// <param name="roles"></param>
+        /// <returns></returns>
+        public List<Roles> GetRolesForThisUser(IEnumerable<Roles> roles)
+        {
+            if (Session["Role"].Equals("Super"))
+            {
+                return roles.ToList();
+            }
+            return roles.ToList().Where(x => !x.Role.Equals("Super")).Where(x => !x.Role.Equals("Admin")).ToList();
         }
 
         #endregion

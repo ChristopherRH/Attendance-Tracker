@@ -28,7 +28,7 @@
                             <li>@Html.ActionLink("Login", "Login", "Account")</li>
                             <li>@Html.ActionLink("Create Account", "Index", "Account")</li>
                         }
-                        if (Session["Role"] != null && Session["Role"].Equals("Admin"))
+                        if (Session["Role"] != null && (Session["Role"].Equals("Admin") || Session["Role"].Equals("Super")))
                         {
                             <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
                             <li>@Html.ActionLink("Roster List", "RosterList", "Admin")</li>

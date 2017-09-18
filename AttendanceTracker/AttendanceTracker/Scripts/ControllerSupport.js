@@ -330,3 +330,32 @@ function UpdateBossesConfiguration(id) {
         }
     });
 }
+
+// update the users
+function UpdateUser(id) {
+    div.empty();
+    var role = $("#" + id + " option:selected").text();
+    var submit = '{id: "' + id + '", role: "' + role + '" }';
+    $.ajax({
+        type: "POST",
+        url: 'UpdateUser',
+        data: submit,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.indexOf("ERROR") !== -1) {
+                div.empty();
+                div.append("INVALID PASSWORD OR MISSING DATA");
+            }
+            else {
+                location.reload();
+            }
+        },
+        error: function (response) {
+            alert("error occurred. Tell Chiaki");
+        },
+        failure: function (response) {
+            alert("failure occurred. Tell Chiaki");
+        }
+    });
+}

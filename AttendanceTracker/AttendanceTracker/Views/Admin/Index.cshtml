@@ -20,12 +20,12 @@
 <input type="button" class="btn btn-success" id="btnGet" value="Submit" onclick="AddPlayerAttendance();" />
 
 <hr />
-<div id="messagesDiv" class="searchable">
+<div id="messagesDiv">
     <table class="table hover" id="attendance">
         <thead><tr><th>Name</th><th>Date</th><th>Day</th><th></th></tr></thead>
         <tbody>
             @{
-                foreach (var x in controller.GetCurrentDataBase())
+                foreach (var x in controller.GetUserAttendance())
                 {
                     <tr>
                         <td>@x.Name</td>
