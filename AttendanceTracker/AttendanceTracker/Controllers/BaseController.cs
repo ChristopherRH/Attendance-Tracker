@@ -26,14 +26,23 @@ namespace AttendanceTracker.Controllers
         {
             var config = new FirebaseConfig()
             {
-                BasePath = "https://attendance-7f6fe.firebaseio.com/",
-                AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
+                // prod TODO: move this to webconfig
+                //BasePath = "https://attendance-7f6fe.firebaseio.com/",
+                //AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
+
+                // test
+                BasePath = "https://paladin-comments.firebaseio.com/"
             };
             _client = new FirebaseClient(config);
         }
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Get the current attendance in the database
+        /// </summary>
+        /// <returns></returns>
         public List<PlayerAttendance> GetCurrentDataBase()
         {
             var list = new List<PlayerAttendance>();
@@ -64,6 +73,10 @@ namespace AttendanceTracker.Controllers
             return list;
         }
 
+        /// <summary>
+        /// Get the current roster in the database
+        /// </summary>
+        /// <returns></returns>
         public List<PlayerRoster> GetCurrentRoster()
         {
             var list = new List<PlayerRoster>();
@@ -91,22 +104,43 @@ namespace AttendanceTracker.Controllers
             return list.OrderBy(x => x.Name).ToList();
         }
 
+        /// <summary>
+        /// The total number of dates logged that have been logged, should equal the number of raids
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public int GetTotalDatesLogged(List<PlayerAttendance> list)
         {
             return list.Select(x => x.Date).Distinct().ToList().Count;
         }
 
+        /// <summary>
+        /// Occurrences that someone's name appears in the attendance list
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public int GetOccurrences(string name, List<PlayerAttendance> list)
         {
             return list.Where(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).ToList().Count;
         }
 
+        /// <summary>
+        /// Determine if the date is valid
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public bool IsValidDate(string date)
         {
             DateTime dt;
             return DateTime.TryParse(date, out dt);
         }
 
+        /// <summary>
+        /// Caluclate a basic hash
+        /// </summary>
+        /// <param name="read"></param>
+        /// <returns></returns>
         public static UInt64 CalculateHash(string read)
         {
             UInt64 hashedValue = 3074457345618258791ul;
@@ -118,6 +152,11 @@ namespace AttendanceTracker.Controllers
             return hashedValue;
         }
 
+        /// <summary>
+        /// Calculate an MD5 hash
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public string CalculateMD5Hash(string input)
 
         {
@@ -134,6 +173,10 @@ namespace AttendanceTracker.Controllers
 
         }
 
+        /// <summary>
+        /// Get the current users in the database
+        /// </summary>
+        /// <returns></returns>
         public List<User> GetCurrentUsers()
         {
             var list = new List<User>();
@@ -146,24 +189,23 @@ namespace AttendanceTracker.Controllers
                 var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
 
                 // get the name/date now
-                var newSplit = split.Replace(id, string.Empty).Replace("name", string.Empty);
-                var player = newSplit.Split(new string[] { "password" }, StringSplitOptions.None);
-                var name = player[0].Substring(7, player[0].Length - 10);
-                var passwordSplit = player[1].Split(new string[] { "(" }, StringSplitOptions.None);
-                var password = passwordSplit[0].Substring(3, passwordSplit[0].Length - 6);
-                var user = new User()
+                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
+                var split3 = split2.Substring(0, split2.Length - 1);
+                var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(split3);
+                user.Id = $"-{id}";
+                if (string.IsNullOrEmpty(user.Role))
                 {
-                    Id = $"-{id}",
-                    Name = name,
-                    Password = password
-                };
-
+                    user.Role = "None";
+                }
                 list.Add(user);
             }
-
             return list;
         }
 
+        /// <summary>
+        /// Get the boss list that users have specified they need
+        /// </summary>
+        /// <returns></returns>
         public List<BossesNeeded> GetUserBosses()
         {
             var list = new List<BossesNeeded>();
@@ -186,6 +228,11 @@ namespace AttendanceTracker.Controllers
             return list;
         }
     
+        /// <summary>
+        /// Take the yes/no values and parse to true/false
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static bool FromString(string str)
         {
             return Convert.ToBoolean(Enum.Parse(typeof(BooleanAliases), str));

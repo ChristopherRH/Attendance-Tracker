@@ -6,8 +6,10 @@ using System.Web.Mvc;
 namespace AttendanceTracker.Controllers
 {
     public class AccountController : BaseController
-    {       
-       
+    {
+
+        #region Views
+
         public ActionResult Index()
         {
             return View();
@@ -30,6 +32,10 @@ namespace AttendanceTracker.Controllers
             Session.Abandon();
             return View();
         }
+
+        #endregion
+
+        #region Verbs
 
         [HttpPost]
         public JsonResult CreateAccount(string name, string password, string passwordVerify)
@@ -59,7 +65,8 @@ namespace AttendanceTracker.Controllers
             _client.PushAsync("users", new
             {
                 name = name,
-                password = passwordHash
+                password = passwordHash,
+                role = "None"
             }).Wait();
 
             _client.PushAsync("bosses", new
@@ -139,6 +146,7 @@ namespace AttendanceTracker.Controllers
             return Json("");
         }
 
-        
+        #endregion
+
     }
 }
