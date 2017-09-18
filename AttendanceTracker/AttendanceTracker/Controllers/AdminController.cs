@@ -56,19 +56,13 @@ namespace AttendanceTracker.Controllers
         /// <returns></returns>
         private bool UserAuthorized()
         {
-            var username = Session["UserName"];
-            if (username == null)
+            var role = Session["Role"];
+            if (role == null)
             {
                 return false;
             }
 
-            var list = GetCurrentUsers();
-            var user = list.FirstOrDefault(x => x.Name.Equals(username.ToString(), StringComparison.InvariantCultureIgnoreCase));
-            if (user == null)
-            {
-                return false;
-            }
-            if (!user.Role.Equals("Admin"))
+            if (!role.Equals("Admin"))
             {
                 return false;
             }
@@ -194,6 +188,12 @@ namespace AttendanceTracker.Controllers
             return Json(json);
         }
 
+        /// <summary>
+        /// Update the boss configuration for the boss list table
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="highlighted"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult UpdateBossesConfiguration(string id, string highlighted)
         {
