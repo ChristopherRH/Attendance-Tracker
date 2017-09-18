@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Web.Mvc;
-using FireSharp.Config;
-using FireSharp;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -10,19 +8,6 @@ namespace AttendanceTracker.Controllers
     public class HomeController : BaseController
     {
         private readonly UInt64 _hash = 5746450151961340805;
-
-        #region Constructor
-        public HomeController()
-        {
-            var config = new FirebaseConfig()
-            {
-                BasePath = "https://attendance-7f6fe.firebaseio.com/",
-                AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
-            };
-            _client = new FirebaseClient(config);
-        }
-
-        #endregion
 
         #region Views
         public ActionResult Index()

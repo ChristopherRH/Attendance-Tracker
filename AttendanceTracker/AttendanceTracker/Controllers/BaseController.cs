@@ -1,4 +1,6 @@
 ﻿using AttendanceTracker.Models;
+using FireSharp;
+using FireSharp.Config;
 using FireSharp.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,18 @@ namespace AttendanceTracker.Controllers
             Yes = 1,
             No = 0
         }
+
+        #region Constructor
+        public BaseController()
+        {
+            var config = new FirebaseConfig()
+            {
+                BasePath = "https://attendance-7f6fe.firebaseio.com/",
+                AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
+            };
+            _client = new FirebaseClient(config);
+        }
+        #endregion
 
         #region Public Methods
         public List<PlayerAttendance> GetCurrentDataBase()

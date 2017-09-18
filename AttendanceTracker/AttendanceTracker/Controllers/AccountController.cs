@@ -1,6 +1,4 @@
 ﻿using AttendanceTracker.Models;
-using FireSharp;
-using FireSharp.Config;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,19 +7,7 @@ namespace AttendanceTracker.Controllers
 {
     public class AccountController : BaseController
     {       
-        
-        #region Constructor
-        public AccountController()
-        {
-            var config = new FirebaseConfig()
-            {
-                BasePath = "https://attendance-7f6fe.firebaseio.com/",
-                AuthSecret = "ZZNsXOiCbqIYvy6HYQOQBUrrnzumJsv163EGqaA0"
-            };
-            _client = new FirebaseClient(config);
-        }
-        #endregion
-
+       
         public ActionResult Index()
         {
             return View();
