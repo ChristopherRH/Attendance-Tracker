@@ -9,7 +9,7 @@
 <span class="validation alert-danger"></span>
 <select class="form-control" id="nameInput">
     @{
-        foreach (var x in controller.GetCurrentRoster())
+        foreach (var x in controller.GetCurrentUsers())
         {
             <option value="@x.Name">@x.Name</option>
         }

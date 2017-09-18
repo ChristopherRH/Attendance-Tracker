@@ -204,7 +204,7 @@ namespace AttendanceTracker.Controllers
         /// <param name="highlighted"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult UpdateUser(string id, string role)
+        public JsonResult UpdateUser(string id, string role, string highlighted)
         {
             var list = GetCurrentUsers();
             var user = list.FirstOrDefault(x => x.Id.Equals(id));

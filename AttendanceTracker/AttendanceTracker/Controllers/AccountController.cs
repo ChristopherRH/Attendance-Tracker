@@ -73,7 +73,7 @@ namespace AttendanceTracker.Controllers
             {
                 name = name,
                 password = passwordHash,
-                role = "None"
+                Role = "None"
             }).Wait();
 
             _client.PushAsync("bosses", new
