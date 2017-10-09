@@ -260,8 +260,8 @@ function UpdateUserBosses(id) {
     var di = $("#boss2 option:selected").text();
     var harj = $("#boss3 option:selected").text();
     var sisters = $("#boss4 option:selected").text();
-    var host = $("#boss5 option:selected").text();
-    var mistress = $("#boss6 option:selected").text();
+    var mistress = $("#boss5 option:selected").text();
+    var host = $("#boss6 option:selected").text();
     var maiden = $("#boss7 option:selected").text();
     var fa = $("#boss8 option:selected").text();
     var kj = $("#boss9 option:selected").text();

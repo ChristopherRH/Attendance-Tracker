@@ -76,7 +76,7 @@ namespace AttendanceTracker.Controllers
             }
 
             // make sure name is in the roster list
-            var roster = GetCurrentRoster();
+            var roster = GetCurrentUsers();
             if (!(roster.Where(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).ToList().Count > 0))
             {
                 return Json(JsonConvert.SerializeObject(msg));
