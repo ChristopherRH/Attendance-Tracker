@@ -1,4 +1,5 @@
-﻿using AttendanceTracker.Models;
+﻿using AttendanceTracker.Attributes;
+using AttendanceTracker.Models;
 using FireSharp;
 using FireSharp.Config;
 using FireSharp.Interfaces;

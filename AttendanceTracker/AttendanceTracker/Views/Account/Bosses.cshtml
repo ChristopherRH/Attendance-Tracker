@@ -2,6 +2,7 @@
     ViewBag.Title = "Table Results";
 }
 @using AttendanceTracker.Controllers;
+@using AttendanceTracker.Attributes;
 
 @model  IEnumerable<AttendanceTracker.Models.BossesNeeded>
 @{
@@ -23,7 +24,16 @@
                     {
                         <tr>
                             <td>@x.User</td>
-                            @{var props = x.GetType().GetProperties();}
+                            @{var props = (x.GetType().GetProperties().Select(y => new
+                                {
+                                    Property = y,
+                                    Attribute = (SortOrder)Attribute.GetCustomAttribute(y, typeof(SortOrder), true)
+                                })
+                                .OrderBy(y => y.Attribute != null ? y.Attribute.Order : -1)
+                                .Select(y => y.Property)
+                                .ToArray());
+
+                            }
                             @for (int i = 3; i <= 11; i++)
                         {
                             var id = $"boss{i - 2}";
