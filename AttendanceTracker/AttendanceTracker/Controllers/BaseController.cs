@@ -181,7 +181,33 @@ namespace AttendanceTracker.Controllers
 
             return list;
         }
-        
+
+        /// <summary>
+        /// Get the transfer list that users have specified
+        /// </summary>
+        /// <returns></returns>
+        public List<PlayerTransfers> GetUserTransfers()
+        {
+            var list = new List<PlayerTransfers>();
+            var results = _client.Get("transfers");
+            var userBosses = results.Body;
+            var splits = userBosses.Split(new string[] { "\"-" }, StringSplitOptions.None).Where(x => x.Contains("User"));
+            foreach (var split in splits)
+            {
+                // the id of each player in db
+                var id = split.Split(new string[] { "\":{" }, StringSplitOptions.None)[0];
+
+                // split to get teh JSON of the rest
+                var split2 = ("{" + split.Split(new string[] { "\":{" }, StringSplitOptions.None)[1]);
+                var split3 = split2.Substring(0, split2.Length - 1);
+                var bosses = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayerTransfers>(split3);
+                bosses.Id = id;
+                list.Add(bosses);
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// The total number of dates logged that have been logged, should equal the number of raids
         /// </summary>

@@ -26,6 +26,12 @@ namespace AttendanceTracker.Controllers
             return View(list);
         }
 
+        public ActionResult Transfer()
+        {
+            var list = GetUserTransfers();
+            return View(list);
+        }
+
         public ActionResult Logout()
         {
             Session.Clear();
@@ -170,6 +176,43 @@ namespace AttendanceTracker.Controllers
             };
 
             _client.UpdateAsync($"bosses/-{id}", update).Wait();
+
+            return Json("");
+        }
+
+
+        /// <summary>
+        /// Update the bosses for Tomb of Sargeras
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="goroth"></param>
+        /// <param name="di"></param>
+        /// <param name="harj"></param>
+        /// <param name="sisters"></param>
+        /// <param name="host"></param>
+        /// <param name="mistress"></param>
+        /// <param name="maiden"></param>
+        /// <param name="fa"></param>
+        /// <param name="kj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UpdateTransfers(string id, string want, string canPay)
+        {
+            var list = GetUserBosses();
+            var user = list.FirstOrDefault(x => x.Id.Equals(id));
+            if (user == null)
+            {
+                return Json("ERROR: An error occurred");
+            }
+
+            var update = new PlayerTransfers
+            {
+                User = user.User,
+                Want = FromString(want),
+                CanPay = FromString(canPay)
+            };
+
+            _client.UpdateAsync($"transfers/-{id}", update).Wait();
 
             return Json("");
         }

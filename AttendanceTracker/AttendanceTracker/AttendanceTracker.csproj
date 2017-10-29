@@ -168,6 +168,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\PlayerTransfers.cs" />
     <Compile Include="Models\BossesNeeded.cs" />
     <Compile Include="Models\PlayerRoster.cs" />
     <Compile Include="Models\PlayerAttendance.cs" />
@@ -228,6 +229,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\NotAuthorized.cshtml" />
     <Content Include="Views\Admin\BossListConfiguration.cshtml" />
+    <Content Include="Views\Account\Transfer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

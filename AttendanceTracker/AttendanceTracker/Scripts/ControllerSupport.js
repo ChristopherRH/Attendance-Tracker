@@ -359,3 +359,38 @@ function UpdateUser(id) {
         }
     });
 }
+
+// update the user bosses
+function UpdateUserTransfers(id) {
+    div.empty();
+    var want = $("#transfer-option-1 option:selected").text();
+    var canPay = $("#transfer-option-2 option:selected").text();
+
+    var submit =
+        '{id: "' + id +
+        '", want: "' + want +
+        '", canPay: "' + canPay + '" }';
+    $.ajax({
+        type: "POST",
+        url: 'UpdateTransfers',
+        data: submit,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.indexOf("ERROR") !== -1) {
+
+                div.empty();
+                div.append("INVALID PASSWORD OR MISSING DATA");
+            }
+            else {
+                location.reload();
+            }
+        },
+        error: function (response) {
+            alert("error occurred. Tell Chiaki");
+        },
+        failure: function (response) {
+            alert("failure occurred. Tell Chiaki");
+        }
+    });
+}

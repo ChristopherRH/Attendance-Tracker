@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Table Results";
+}
+@using AttendanceTracker.Controllers;
+@using AttendanceTracker.Attributes;
+
+@model  IEnumerable<AttendanceTracker.Models.PlayerTransfers>
+@{
+    var list = Model;
+    var loginAs = Session["UserName"] ?? null;
+}
+<h3>Transfer List</h3>
+<table class="table" id="attendance">
+    <thead><tr><th>Name</th><th>Want to go horde</th><th>Can pay for self</th><th></th></tr></thead>
+    <tbody>
+        @{
+            var controller = (AccountController)ViewContext.Controller;
+            var trialUpUsers = controller.GetCurrentUsers().ToList().Where(x => !x.Role.Equals("None")).ToList();
+            foreach (var x in list)
+            {
+                if (trialUpUsers.Where(y => y.Name.Equals(x.User)).ToList().Count > 0)
+                {
+                    if (loginAs != null && x.User.Equals(loginAs.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        <tr>
+                            <td>@x.User</td>
+                            @{var props = (x.GetType().GetProperties().Select(y => new
+                                {
+                                    Property = y,
+                                    Attribute = (SortOrder)Attribute.GetCustomAttribute(y, typeof(SortOrder), true)
+                                })
+                                .OrderBy(y => y.Attribute != null ? y.Attribute.Order : -1)
+                                .Select(y => y.Property)
+                                .ToArray());
+
+                            }
+                            @for (int i = 2; i <= 3; i++)
+                        {
+                            var id = $"transfer-option-{i - 1}";
+                            var value = x.GetType().GetProperty(props[i].Name).GetValue(x, null).ToString();
+                                <td>
+                                    <select id="@id">
+                                        <option>@(value.Equals("true", StringComparison.CurrentCultureIgnoreCase) ? "Yes" : "No")</option>
+                                        <option>@(value.Equals("true", StringComparison.CurrentCultureIgnoreCase) ? "No" : "Yes")</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="button" class="btn btn-success" value="Update" onclick='UpdateUserTransfers("@x.Id")' />
+                            </td>
+                        </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@x.User</td>
+                                <td style="color:@Html.Raw((x.Want) ? "green" : "red")">@(x.Want ? "Yes" : "No")</td>
+                                <td style="color:@Html.Raw((x.CanPay) ? "green" : "red")">@(x.CanPay ? "Yes" : "No")</td>
+                                <td></td>
+                            </tr>
+                                }
+                            }
+                        }
+        }
+    </tbody>
+</table>
+
+
+@{
+
+    if (loginAs == null)
+    {
+        <footer>Not Logged In</footer>
+    }
+    else
+    {
+        <footer>Logged in as: @loginAs.ToString()</footer>
+    }
+}
