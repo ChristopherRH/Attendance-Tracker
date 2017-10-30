@@ -365,11 +365,12 @@ function UpdateUserTransfers(id) {
     div.empty();
     var want = $("#transfer-option-1 option:selected").text();
     var canPay = $("#transfer-option-2 option:selected").text();
-
+    var comment = $("#transfer-option-3").val();
     var submit =
         '{id: "' + id +
         '", want: "' + want +
-        '", canPay: "' + canPay + '" }';
+        '", canPay: "' + canPay +
+        '", comment: "' + comment + '" }';
     $.ajax({
         type: "POST",
         url: 'UpdateTransfers',

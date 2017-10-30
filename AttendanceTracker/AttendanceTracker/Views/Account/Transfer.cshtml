@@ -11,7 +11,7 @@
 }
 <h3>Transfer List</h3>
 <table class="table" id="attendance">
-    <thead><tr><th>Name</th><th>Want to go horde</th><th>Can pay for self</th><th></th></tr></thead>
+    <thead><tr><th>Name</th><th>Want to go horde</th><th>Can pay for self</th><th>Notes</th><th></th></tr></thead>
     <tbody>
         @{
             var controller = (AccountController)ViewContext.Controller;
@@ -37,7 +37,7 @@
                             @for (int i = 2; i <= 3; i++)
                         {
                             var id = $"transfer-option-{i - 1}";
-                            var value = x.GetType().GetProperty(props[i].Name).GetValue(x, null).ToString();
+                            var value = x.GetType().GetProperty(props[i].Name).GetValue(x, null)?.ToString() ?? string.Empty;
                                 <td>
                                     <select id="@id">
                                         <option>@(value.Equals("true", StringComparison.CurrentCultureIgnoreCase) ? "Yes" : "No")</option>
@@ -45,7 +45,9 @@
                                     </select>
                                 </td>
                             }
-
+                            <td>
+                                <textarea maxlength="50" id="transfer-option-3">@x.Comment</textarea>
+                            </td>
                             <td>
                                 <input type="button" class="btn btn-success" value="Update" onclick='UpdateUserTransfers("@x.Id")' />
                             </td>
@@ -55,8 +57,22 @@
                         {
                             <tr>
                                 <td>@x.User</td>
-                                <td style="color:@Html.Raw((x.Want) ? "green" : "red")">@(x.Want ? "Yes" : "No")</td>
+                                @{ string wantColor;
+                                    string wantText;
+                                    if (String.IsNullOrEmpty(x.Want))
+                                    {
+                                        wantColor = "orange";
+                                        wantText = "Undecided";
+                                    }
+                                    else
+                                    {
+                                        wantColor = x.Want.Equals("True") ? "green" : "red";
+                                        wantText = x.Want.Equals("True") ? "Yes" : "No";
+                                    }
+                                }
+                                <td style="color:@Html.Raw(wantColor)">@(wantText)</td>
                                 <td style="color:@Html.Raw((x.CanPay) ? "green" : "red")">@(x.CanPay ? "Yes" : "No")</td>
+                                <td>@x.Comment</td>
                                 <td></td>
                             </tr>
                                 }

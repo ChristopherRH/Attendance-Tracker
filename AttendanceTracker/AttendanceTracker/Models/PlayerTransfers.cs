@@ -8,10 +8,13 @@ namespace AttendanceTracker.Models
         public string User { get; set; }
 
         [SortOrder(1)]
-        public bool Want { get; set; }
+        public string Want { get; set; }
 
         [SortOrder(2)]
         public bool CanPay { get; set; }
+
+        [SortOrder(3)]
+        public string Comment { get; set; }
         
     }
 }

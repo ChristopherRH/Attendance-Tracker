@@ -96,6 +96,14 @@ namespace AttendanceTracker.Controllers
                 Kiljaeden = false
             }).Wait();
 
+            _client.PushAsync("transfers", new
+            {
+                User = name,
+                Want = string.Empty,
+                canPay = false,
+                Comment = string.Empty
+            });
+
             return Json("");
         }
 
@@ -196,7 +204,7 @@ namespace AttendanceTracker.Controllers
         /// <param name="kj"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult UpdateTransfers(string id, string want, string canPay)
+        public JsonResult UpdateTransfers(string id, string want, string canPay, string comment)
         {
             var list = GetUserBosses();
             var user = list.FirstOrDefault(x => x.Id.Equals(id));
@@ -205,11 +213,21 @@ namespace AttendanceTracker.Controllers
                 return Json("ERROR: An error occurred");
             }
 
+            if (string.IsNullOrEmpty(comment))
+            {
+                comment = string.Empty;
+            }
+            if(comment.Length > 50)
+            {
+                comment = comment.Substring(0, 50);
+            }
+
             var update = new PlayerTransfers
             {
                 User = user.User,
-                Want = FromString(want),
-                CanPay = FromString(canPay)
+                Want = FromString(want).ToString(),
+                CanPay = FromString(canPay),
+                Comment = comment
             };
 
             _client.UpdateAsync($"transfers/-{id}", update).Wait();
